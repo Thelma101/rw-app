@@ -54,7 +54,7 @@ const Results: React.FC = () => {
           <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">Quiz Results</h2>
           
           {/* Score Summary */}
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-xl mb-8 border-2 border-blue-100">
+          <div className="bg-gradient-to-r from-green-50 to-teal-50 p-8 rounded-xl mb-8 border-2 border-blue-100">
             <div className="text-center mb-6">
               <div className="text-5xl font-bold text-gray-800 mb-2">
                 {results.score}<span className="text-2xl text-gray-500">/{results.total}</span>
