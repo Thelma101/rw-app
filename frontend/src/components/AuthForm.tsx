@@ -28,7 +28,7 @@ const AuthForm: React.FC = () => {
       }
       
       setAuth(response.data.token, response.data.user);
-      navigate('/questions');
+      navigate('/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.error || 'An error occurred');
     } finally {
