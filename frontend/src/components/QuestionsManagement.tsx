@@ -54,7 +54,7 @@ const QuestionsManagement: React.FC = () => {
     setError('');
     try {
       if (editing) {
-        await questionsAPI.updateQuestion(editing.id, {
+        await questionsAPI.updateQuestion(String(editing.id), {
           text: form.text,
           options: form.options,
           correctAnswer: form.correctAnswer,
@@ -78,9 +78,9 @@ const QuestionsManagement: React.FC = () => {
     setForm(q);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string | number) => {
     try {
-      await questionsAPI.deleteQuestion(id);
+      await questionsAPI.deleteQuestion(String(id));
       await loadQuestions();
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to delete question');
