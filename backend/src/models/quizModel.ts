@@ -45,6 +45,8 @@ exports.updateQuestion = async function (id, questionData) {
 };
 
 exports.deleteQuestion = async function (id) {
+    // Remove dependent answers first to avoid FK violations
+    await db.pool.query('DELETE FROM answers WHERE question_id = $1', [id]);
     const result = await db.pool.query('DELETE FROM questions WHERE id = $1 RETURNING id', [id]);
     return result.rows[0];
 };

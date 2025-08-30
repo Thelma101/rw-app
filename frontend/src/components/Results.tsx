@@ -64,7 +64,7 @@ const Results: React.FC = () => {
               </div>
               <div className="w-full bg-gray-200 rounded-full h-4 mb-2">
                 <div 
-                  className="bg-gradient-to-r from-blue-500 to-purple-600 h-4 rounded-full transition-all duration-1000"
+                  className="bg-gradient-to-r from-green-500 to-green-600 h-4 rounded-full transition-all duration-1000"
                   style={{ width: `${percentage}%` }}
                 ></div>
               </div>

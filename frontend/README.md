@@ -1,32 +1,77 @@
-## Quiz App (Frontend + Backend)
+## ReadWrite Assessments
 
-This project implements a full-stack quiz application per the requirements.
+Full‑stack quiz app: React (Vite + TS) frontend, Express (TS) backend, PostgreSQL, JWT auth, Zustand state, Tailwind UI.
 
-### Tech
-- Frontend: React 18 + TypeScript, Vite, React Router v6, Zustand, Tailwind, Axios
-- Backend: Express.js (TypeScript), PostgreSQL, JWT, express-validator, bcryptjs
+### Structure
+- `backend/`: Express + TypeScript + PostgreSQL
+- `frontend/`: React + Vite + TypeScript
 
-### Running locally
-1) Backend
+### Local development
+Backend
 ```
-cd server
+cd backend
 npm install
-cp .env.example .env
-# create DB and tables
-createdb quiz_app
-psql -d quiz_app -c 'CREATE EXTENSION IF NOT EXISTS pgcrypto;'
-psql -d quiz_app -f sql/init.sql
-psql -d quiz_app -f sql/sample_data.sql
+# create backend/.env with your DB + JWT
 npm run dev
-```
-2) Frontend
-```
-npm install
-npm run dev
+# health: http://localhost:50001/api/health
 ```
 
-The frontend runs on http://localhost:3000 and proxies API requests to http://localhost:5001/api.
+Frontend
+```
+cd frontend
+npm install
+# set VITE_API_BASE_URL in Vercel or a local .env if you prefer
+npm run dev
+# opens http://localhost:3000
+```
 
 ### Environment variables
-- Frontend: `VITE_API_BASE_URL` (optional; defaults to `/api`)
-- Backend: see `server/.env.example`
+Backend (Render)
+- DB_HOST: Postgres host (e.g. hqrjzjathiiivycrggal.supabase.co)
+- DB_PORT: 5432
+- DB_NAME: postgres (or your DB name)
+- DB_USER: postgres (or your DB user)
+- DB_PASSWORD: your Postgres password (Supabase Database password)
+- DB_SSL: true
+- JWT_SECRET: long random string
+- NODE_ENV: production
+- Optional: CORS_ORIGIN=https://your-frontend.vercel.app
+
+Frontend (Vercel)
+- VITE_API_BASE_URL: https://YOUR-BACKEND.onrender.com/api/v1
+
+Note on Supabase password: Use the Database password from Supabase (Project settings → Database → Connection info). The default is not necessarily "postgres".
+
+### Build & deploy
+Backend (Render)
+- Root: `backend`
+- Build: `npm ci && npm run build`
+- Start: `node dist/server.js`
+- Health check: `/api/health`
+
+Frontend (Vercel)
+- Root: `frontend`
+- Build: `npm run build`
+- Output: `dist`
+- `vercel.json` includes SPA rewrite so routes like `/dashboard` work
+
+### API quick reference
+- POST `/api/v1/auth/register` { name, email, password }
+- POST `/api/v1/auth/login` { email, password }
+- POST `/api/v1/quiz/start` { limit? }
+- POST `/api/v1/quiz/submit` { answers: string[], timeTaken: number, questions: any[] }
+
+### Sample curl
+```
+# Base
+API=https://YOUR-BACKEND.onrender.com/api/v1
+
+# Register
+curl -sS -X POST $API/auth/register -H 'Content-Type: application/json' -d '{"name":"Tee Akpata","email":"tee.akpata@gmail.com","password":"password123"}'
+
+# Login
+curl -sS -X POST $API/auth/login -H 'Content-Type: application/json' -d '{"email":"tee.akpata@gmail.com","password":"password123"}'
+
+# Start quiz (set TOKEN from login output)
+curl -sS -X POST $API/quiz/start -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"limit":3}'
+```
