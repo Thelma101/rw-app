@@ -7,6 +7,7 @@
         database: process.env.DB_NAME,
         password: process.env.DB_PASSWORD,
         port: parseInt(process.env.DB_PORT || '5432'),
+        ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
     });
 
     exports.connectToDatabase = async function () {
@@ -21,19 +22,21 @@
     };
 
     async function initTables() {
-
+        // users
         await pool.query(`
             CREATE TABLE IF NOT EXISTS users (
-                id VARCHAR(10) PRIMARY KEY DEFAULT 'q-' || LPAD(nextval('question_id_seq')::text, 4, '0'),                name VARCHAR(100) NOT NULL,
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(100) NOT NULL,
                 email VARCHAR(100) UNIQUE NOT NULL,
                 password VARCHAR(255) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
 
+        // questions
         await pool.query(`
             CREATE TABLE IF NOT EXISTS questions (
-                id VARCHAR(10) PRIMARY KEY DEFAULT 'quiz-' || LPAD(nextval('quiz_id_seq')::text, 4, '0'),
+                id SERIAL PRIMARY KEY,
                 question_text TEXT NOT NULL,
                 options JSONB NOT NULL,
                 correct_answer CHAR(1) NOT NULL,
@@ -42,17 +45,19 @@
             )
         `);
 
-
+        // quiz_results
         await pool.query(`
-        CREATE TABLE IF NOT EXISTS answers (
-            id SERIAL PRIMARY KEY,
-            quiz_result_id VARCHAR(10) REFERENCES quiz_results(id),
-            question_id VARCHAR(10) REFERENCES questions(id),
-            user_answer CHAR(1) NOT NULL,
-            is_correct BOOLEAN NOT NULL
-        )
-    `);
+            CREATE TABLE IF NOT EXISTS quiz_results (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER REFERENCES users(id),
+                score INTEGER NOT NULL,
+                total_questions INTEGER NOT NULL,
+                time_taken INTEGER NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
 
+        // answers
         await pool.query(`
             CREATE TABLE IF NOT EXISTS answers (
                 id SERIAL PRIMARY KEY,
