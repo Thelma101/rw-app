@@ -18,10 +18,13 @@ const Results: React.FC = () => {
 
   if (!results) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading results...</p>
+          <p className="mt-4 text-gray-700 mb-6">No results yet.</p>
+          <div className="flex gap-3 justify-center">
+            <button onClick={handleRetry} className="btn-primary">Start Quiz</button>
+            <button onClick={handleDashboard} className="btn-secondary">Back to Dashboard</button>
+          </div>
         </div>
       </div>
     );

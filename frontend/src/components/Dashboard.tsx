@@ -110,7 +110,7 @@ const Dashboard: React.FC = () => {
           </Link>
 
           <Link 
-            to="/manage-questions" 
+            to="/questions" 
             className="group relative bg-white rounded-xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-300"
           >
             <div className="text-center">
@@ -127,15 +127,15 @@ const Dashboard: React.FC = () => {
           </Link>
 
           <Link 
-            to="/history" 
+            to="/results" 
             className="group relative bg-white rounded-xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-300"
           >
             <div className="text-center">
               <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                 <span className="text-2xl">📈</span>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">View Analytics</h3>
-              <p className="text-gray-600">See your performance metrics</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">View Results</h3>
+              <p className="text-gray-600">See your recent quiz outcomes</p>
               <div className="mt-4 inline-flex items-center text-gray-700 group-hover:text-gray-900">
                 <span>View</span>
                 <span className="ml-2">→</span>
