@@ -156,7 +156,7 @@ const Quiz: React.FC = () => {
           <button
             onClick={handlePrevious}
             disabled={currentQuestionIndex === 0}
-            className="bg-gray-500 text-white px-6 py-2 rounded-lg disabled:opacity-50 hover:bg-gray-600 transition-colors"
+            className="bg-green-600 text-white px-6 py-2 rounded-lg disabled:opacity-50 hover:bg-green-700 transition-colors"
           >
             Previous
           </button>
@@ -173,7 +173,7 @@ const Quiz: React.FC = () => {
             <button
               onClick={handleNext}
               disabled={!answers[currentQuestionIndex]}
-              className="bg-blue-500 text-white px-6 py-2 rounded-lg disabled:opacity-50 hover:bg-blue-600 transition-colors"
+              className="bg-green-600 text-white px-6 py-2 rounded-lg disabled:opacity-50 hover:bg-green-700 transition-colors"
             >
               Next
             </button>

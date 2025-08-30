@@ -2,7 +2,7 @@ import React from 'react';
 import { questionsAPI } from '../services/api';
 
 type Question = {
-  id: string;
+  id: string | number;
   text: string;
   options: Record<string, string>;
   correctAnswer: string;
@@ -26,7 +26,13 @@ const QuestionsManagement: React.FC = () => {
     try {
       setLoading(true);
       const res = await questionsAPI.getQuestions();
-      setQuestions(res.data);
+      const normalized: Question[] = (res.data || []).map((q: any) => ({
+        id: q.id,
+        text: q.text ?? q.question_text ?? '',
+        options: q.options ?? {},
+        correctAnswer: q.correctAnswer ?? q.correct_answer ?? ''
+      }));
+      setQuestions(normalized);
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to load questions');
     } finally {
