@@ -61,7 +61,12 @@ const Quiz: React.FC = () => {
     try {
       setIsSubmitting(true);
       const timeTaken = timeStarted ? Math.floor((new Date().getTime() - timeStarted.getTime()) / 1000) : 0;
-      const { data } = await quizAPI.submitQuiz(answers, timeTaken, questions.map((q: any) => q.__raw ?? q));
+      const payload = questions.map((q: any, index: number) => ({
+        questionId: Number(q.id),
+        userAnswer: answers[index],
+        isCorrect: (q.correct_answer ?? q.correctAnswer) === answers[index]
+      }));
+      const { data } = await quizAPI.submitQuiz(payload, timeTaken);
       setResults(data);
       navigate('/results');
     } catch (error) {

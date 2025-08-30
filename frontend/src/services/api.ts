@@ -44,8 +44,10 @@ export const quizAPI = {
   startQuiz: (data: { category?: string; difficulty?: string; limit?: number } = {}) => 
     api.post('/quiz/start', data),
   
-  submitQuiz: (answers: string[], timeTaken: number, questions: any[]) => 
-    api.post('/quiz/submit', { answers, timeTaken, questions }),
+  submitQuiz: (
+    answers: { questionId: number; userAnswer: string; isCorrect: boolean }[],
+    timeTaken: number
+  ) => api.post('/quiz/submit', { answers, timeTaken }),
 };
 
 export const questionsAPI = {
