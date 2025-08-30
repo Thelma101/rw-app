@@ -36,7 +36,7 @@ const Results: React.FC = () => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const percentage = (results.score / results.total) * 100;
+  const percentage = results && results.total ? (results.score / results.total) * 100 : 0;
   const getPerformanceMessage = () => {
     if (percentage === 100) return { message: 'Perfect score! 🎉', color: 'text-yellow-600' };
     if (percentage >= 80) return { message: 'Excellent! 🌟', color: 'text-green-600' };
@@ -87,39 +87,41 @@ const Results: React.FC = () => {
             </div>
           </div>
           
-          {/* Question Review */}
-          <div className="mb-8">
-            <h3 className="text-2xl font-semibold mb-6 text-gray-800 border-b-2 border-gray-200 pb-3">
-              Question Review
-            </h3>
-            <div className="space-y-6">
-              {results.results.map((result: any, index: number) => (
-                <div key={index} className={`p-6 rounded-xl border-2 ${
-                  result.isCorrect 
-                    ? 'bg-green-50 border-green-200' 
-                    : 'bg-red-50 border-red-200'
-                }`}>
-                  <div className="font-semibold text-lg mb-3 text-gray-800">
-                    Q{index + 1}: {result.question}
-                  </div>
-                  <div className="space-y-2">
-                    <div className={`p-3 rounded-lg ${
-                      result.isCorrect 
-                        ? 'bg-green-100 border border-green-300 text-green-800' 
-                        : 'bg-red-100 border border-red-300 text-red-800'
-                    }`}>
-                      <span className="font-medium">Your answer:</span> {result.userAnswer || 'Not answered'}
+          {/* Question Review (only if backend returned details) */}
+          {Array.isArray(results.results) && results.results.length > 0 && (
+            <div className="mb-8">
+              <h3 className="text-2xl font-semibold mb-6 text-gray-800 border-b-2 border-gray-200 pb-3">
+                Question Review
+              </h3>
+              <div className="space-y-6">
+                {results.results.map((result: any, index: number) => (
+                  <div key={index} className={`p-6 rounded-xl border-2 ${
+                    result.isCorrect 
+                      ? 'bg-green-50 border-green-200' 
+                      : 'bg-red-50 border-red-200'
+                  }`}>
+                    <div className="font-semibold text-lg mb-3 text-gray-800">
+                      Q{index + 1}: {result.question}
                     </div>
-                    {!result.isCorrect && (
-                      <div className="p-3 rounded-lg bg-green-100 border border-green-300 text-green-800">
-                        <span className="font-medium">Correct answer:</span> {result.correctAnswer}
+                    <div className="space-y-2">
+                      <div className={`p-3 rounded-lg ${
+                        result.isCorrect 
+                          ? 'bg-green-100 border border-green-300 text-green-800' 
+                          : 'bg-red-100 border border-red-300 text-red-800'
+                      }`}>
+                        <span className="font-medium">Your answer:</span> {result.userAnswer || 'Not answered'}
                       </div>
-                    )}
+                      {!result.isCorrect && (
+                        <div className="p-3 rounded-lg bg-green-100 border border-green-300 text-green-800">
+                          <span className="font-medium">Correct answer:</span> {result.correctAnswer}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
           
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
