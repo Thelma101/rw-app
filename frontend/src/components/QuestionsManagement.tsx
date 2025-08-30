@@ -20,7 +20,7 @@ const QuestionsManagement: React.FC = () => {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState('');
   const [editing, setEditing] = React.useState<Question | null>(null);
-  const [form, setForm] = React.useState<Question>(emptyQuestion);
+  const [form, setForm] = React.useState<(Question & { category?: string; difficulty?: number })>(emptyQuestion as any);
 
   const loadQuestions = async () => {
     try {
@@ -53,18 +53,17 @@ const QuestionsManagement: React.FC = () => {
     e.preventDefault();
     setError('');
     try {
+      const payload = {
+        question_text: form.text,
+        options: form.options,
+        correct_answer: form.correctAnswer,
+        category: (form as any).category,
+        difficulty: (form as any).difficulty || 1
+      } as any;
       if (editing) {
-        await questionsAPI.updateQuestion(String(editing.id), {
-          text: form.text,
-          options: form.options,
-          correctAnswer: form.correctAnswer,
-        });
+        await questionsAPI.updateQuestion(String(editing.id), payload);
       } else {
-        await questionsAPI.createQuestion({
-          text: form.text,
-          options: form.options,
-          correctAnswer: form.correctAnswer,
-        });
+        await questionsAPI.createQuestion(payload);
       }
       resetForm();
       await loadQuestions();
@@ -137,6 +136,29 @@ const QuestionsManagement: React.FC = () => {
                   <option key={key} value={key}>{key}</option>
                 ))}
               </select>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block mb-2 font-medium">Category</label>
+                <input
+                  className="input-field"
+                  placeholder="e.g., Math"
+                  value={(form as any).category || ''}
+                  onChange={(e) => setForm({ ...(form as any), category: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className="block mb-2 font-medium">Difficulty</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={5}
+                  className="input-field"
+                  placeholder="1-5"
+                  value={(form as any).difficulty || 1}
+                  onChange={(e) => setForm({ ...(form as any), difficulty: Number(e.target.value) })}
+                />
+              </div>
             </div>
             <div className="flex gap-3">
               <button type="submit" className="btn-primary">
